@@ -6,18 +6,22 @@
   };
 
   outputs = { self, nixpkgs }:
-    with import nixpkgs { system = "x86_64-linux"; };
+    let
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
+    in
     rec {
-      packages.x86_64-linux.Mirror = stdenv.mkDerivation rec {
+      packages.x86_64-linux.Mirror = pkgs.stdenv.mkDerivation rec {
         version = "1.3.0";
         name = "mirror-${version}";
-        src = fetchurl {
+
+        src = pkgs.fetchurl {
           url = "https://download.panic.com/mirror/Linux/Mirror-${version}.tar.gz";
           hash = "sha256-JQNpl5UKaoEpj5wvp6k2iZ7qyKXpWiIG/z8nHt0+l38=";
         };
-        nativeBuildInputs = [ autoPatchelfHook ];
 
-        buildInputs = [
+        nativeBuildInputs = with pkgs; [ autoPatchelfHook ];
+
+        buildInputs = with pkgs;[
           gtk3
           webkitgtk
         ];
@@ -30,10 +34,9 @@
           runHook postInstall
         '';
 
-        sourceRoot = ".";
-        meta = with lib; {
+        meta = with pkgs.lib; {
           homepage = "https://play.date/mirror";
-          description = "Mirror streams gameplay audio and video in real-time from your Playdate to a computer";
+          description = "Mirror is an app that streams gameplay audio and video in real-time from your Playdate to a macOS, Windows, or Linux computer.";
           platforms = platforms.linux;
         };
       };
