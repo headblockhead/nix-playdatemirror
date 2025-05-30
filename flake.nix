@@ -35,8 +35,9 @@
         '';
 
         meta = with pkgs.lib; {
-          homepage = "https://play.date/mirror";
           description = "Mirror is an app that streams gameplay audio and video in real-time from your Playdate to a macOS, Windows, or Linux computer.";
+          homepage = "https://play.date/mirror";
+          #license = licenses.unfree;
           platforms = platforms.linux;
         };
       };
